@@ -65,7 +65,8 @@ function BusinessDetails() {
 
   const handleContinue = () => {
     // Add validation here if needed
-    navigate('/services')
+    localStorage.setItem('businessName', companyName);
+    navigate('/services');
   }
 
   return (
