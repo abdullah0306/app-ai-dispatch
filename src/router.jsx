@@ -9,6 +9,9 @@ import Permissions from './pages/Permissions'
 import Restrictions from './pages/Restrictions'
 import FAQs from './pages/FAQs'
 import Pricing from './pages/Pricing'
+import PaymentDetails from './pages/PaymentDetails'
+import Success from './pages/Success'
+import Dashboard from './pages/Dashboard'
 
 export const router = createBrowserRouter([
   {
@@ -50,5 +53,17 @@ export const router = createBrowserRouter([
   {
     path: '/pricing',
     element: <Pricing />
+  },
+  {
+    path: '/payment-details',
+    element: <PaymentDetails />
+  },
+  {
+    path: '/success',
+    element: <Success />
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />
   }
 ])
