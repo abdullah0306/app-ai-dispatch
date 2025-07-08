@@ -40,7 +40,7 @@ function Restrictions() {
       <div className="progress-container">
         <div className="progress-bar">
           {[1, 2, 3, 4, 5, 6, 7].map((step) => (
-            <div key={step} className={`progress-step ${step === 6 ? 'active' : ''}`}>
+            <div key={step} className={`progress-step ${step === 4 ? 'active' : ''}`}>
               {step}
             </div>
           ))}

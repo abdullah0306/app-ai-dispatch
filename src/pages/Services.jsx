@@ -34,7 +34,7 @@ function Services() {
   const handleContinue = () => {
     // Add validation here if needed
     // Store services data in state management or localStorage if needed
-    navigate('/lead-sources')
+    navigate('/greeting')
   }
 
   return (
@@ -135,7 +135,7 @@ function Services() {
             <span className="back-icon">←</span> Back to Business Details
           </button>
           <button onClick={handleContinue} className="continue-btn">
-            Continue to Lead Sources <span className="continue-icon">→</span>
+            Continue <span className="continue-icon">→</span>
           </button>
         </div>
       </div>

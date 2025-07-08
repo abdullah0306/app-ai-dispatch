@@ -33,7 +33,7 @@ function Greeting() {
   ]
 
   const handleBack = () => {
-    navigate('/')
+    navigate('/services')
   }
 
   const handleContinue = () => {
@@ -49,7 +49,7 @@ function Greeting() {
       <div className="progress-container">
         <div className="progress-bar">
           {[1, 2, 3, 4, 5, 6, 7].map((step) => (
-            <div key={step} className={`progress-step ${step === 1 ? 'active' : ''}`}>
+            <div key={step} className={`progress-step ${step === 4 ? 'active' : ''}`}>
               {step}
             </div>
           ))}
@@ -133,7 +133,7 @@ function Greeting() {
 
         <div className="button-container">
           <button onClick={handleBack} className="back-btn">
-            <span className="back-icon">←</span> Back to Home
+            <span className="back-icon">←</span> Back to Services
           </button>
           <button onClick={handleContinue} className="continue-btn">
             Continue to Lead Sources <span className="continue-icon">→</span>
