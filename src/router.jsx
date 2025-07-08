@@ -8,6 +8,7 @@ import ServiceSettings from './pages/ServiceSettings'
 import Permissions from './pages/Permissions'
 import Restrictions from './pages/Restrictions'
 import FAQs from './pages/FAQs'
+import Pricing from './pages/Pricing'
 
 export const router = createBrowserRouter([
   {
@@ -45,5 +46,9 @@ export const router = createBrowserRouter([
   {
     path: '/faqs',
     element: <FAQs />
+  },
+  {
+    path: '/pricing',
+    element: <Pricing />
   }
 ])

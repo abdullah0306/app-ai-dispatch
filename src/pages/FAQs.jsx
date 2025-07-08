@@ -61,8 +61,7 @@ function FAQs() {
   }
 
   const handleFinish = () => {
-    // Complete the setup process
-    navigate('/')
+    navigate('/pricing')
   }
 
   return (
@@ -197,7 +196,7 @@ function FAQs() {
             <span className="back-icon">←</span> Back to Restrictions
           </button>
           <button onClick={handleFinish} className="continue-btn">
-            Finish Setup <span className="continue-icon">→</span>
+            Continue <span className="continue-icon">→</span>
           </button>
         </div>
       </div>
