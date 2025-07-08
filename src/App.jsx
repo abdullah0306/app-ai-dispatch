@@ -1,11 +1,36 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './App.css'
 
 function App() {
+  const [url, setUrl] = useState('')
+  const [error, setError] = useState('')
+  const navigate = useNavigate()
+
+  const handleContinue = () => {
+    if (!url.trim()) {
+      setError('Please enter a website URL to continue')
+      return
+    }
+
+    try {
+      new URL(url)
+      setError('')
+      navigate('/business-details', { state: { websiteUrl: url } })
+    } catch (e) {
+      setError('Please enter a valid URL including http:// or https://')
+    }
+  }
+
+  const handleSkip = () => {
+    navigate('/business-details')
+  }
+
   return (
     <div className="container">
       <div className="logo-container">
           <img src="/logo.png" alt="AIDispatch" className="logo" />
-        </div>
+      </div>
       
       <div className="progress-container">
         <div className="progress-bar">
@@ -32,18 +57,24 @@ function App() {
               type="url" 
               placeholder="https://www.yourbusiness.com"
               className="url-input"
+              value={url}
+              onChange={(e) => {
+                setUrl(e.target.value)
+                setError('')
+              }}
             />
             <p className="input-hint">Make sure to include https:// or http:// (e.g., https://www.example.com)</p>
+            {error && <p className="error-message" style={{ color: 'red', marginTop: '5px' }}>{error}</p>}
           </div>
 
           <div className="button-group">
-            <button className="primary-button">
+            <button className="primary-button" onClick={handleContinue}>
               Continue with Website
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
-            <button className="secondary-button">Skip & Enter Manually</button>
+            <button className="secondary-button" onClick={handleSkip}>Skip & Enter Manually</button>
           </div>
         </div>
 
