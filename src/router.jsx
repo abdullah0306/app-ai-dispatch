@@ -12,58 +12,64 @@ import Pricing from './pages/Pricing'
 import PaymentDetails from './pages/PaymentDetails'
 import Success from './pages/Success'
 import Dashboard from './pages/Dashboard'
+import Login from './pages/Login'
+import ProtectedRoute from './components/ProtectedRoute'
 
 export const router = createBrowserRouter([
   {
+    path: '/login',
+    element: <ProtectedRoute requireAuth={false}><Login /></ProtectedRoute>
+  },
+  {
     path: '/',
-    element: <App />
+    element: <ProtectedRoute><App /></ProtectedRoute>
   },
   {
     path: '/business-details',
-    element: <BusinessDetails />
+    element: <ProtectedRoute><BusinessDetails /></ProtectedRoute>
   },
   {
     path: '/services',
-    element: <Services />
+    element: <ProtectedRoute><Services /></ProtectedRoute>
   },
   {
     path: '/greeting',
-    element: <Greeting />
+    element: <ProtectedRoute><Greeting /></ProtectedRoute>
   },
   {
     path: '/lead-sources',
-    element: <LeadSources />
+    element: <ProtectedRoute><LeadSources /></ProtectedRoute>
   },
   {
     path: '/service-settings',
-    element: <ServiceSettings />
+    element: <ProtectedRoute><ServiceSettings /></ProtectedRoute>
   },
   {
     path: '/permissions',
-    element: <Permissions />
+    element: <ProtectedRoute><Permissions /></ProtectedRoute>
   },
   {
     path: '/restrictions',
-    element: <Restrictions />
+    element: <ProtectedRoute><Restrictions /></ProtectedRoute>
   },
   {
     path: '/faqs',
-    element: <FAQs />
+    element: <ProtectedRoute><FAQs /></ProtectedRoute>
   },
   {
     path: '/pricing',
-    element: <Pricing />
+    element: <ProtectedRoute><Pricing /></ProtectedRoute>
   },
   {
     path: '/payment-details',
-    element: <PaymentDetails />
+    element: <ProtectedRoute><PaymentDetails /></ProtectedRoute>
   },
   {
     path: '/success',
-    element: <Success />
+    element: <ProtectedRoute><Success /></ProtectedRoute>
   },
   {
     path: '/dashboard',
-    element: <Dashboard />
+    element: <ProtectedRoute><Dashboard /></ProtectedRoute>
   }
 ])

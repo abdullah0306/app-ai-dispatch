@@ -17,7 +17,7 @@ function App() {
       new URL(url)
       setError('')
       navigate('/business-details', { state: { websiteUrl: url } })
-    } catch (e) {
+    } catch {
       setError('Please enter a valid URL including http:// or https://')
     }
   }
