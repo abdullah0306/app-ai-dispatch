@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useScrapedData } from '../contexts/ScrapedDataContext'
 
 function Services() {
   const navigate = useNavigate()
+  const { scrapedData } = useScrapedData()
   const [services, setServices] = useState([
     {
       name: '',
@@ -11,6 +13,17 @@ function Services() {
       duration: ''
     }
   ])
+
+  useEffect(() => {
+    if (scrapedData && Array.isArray(scrapedData["Services offered"])) {
+      setServices(scrapedData["Services offered"].map(service => ({
+        name: service,
+        price: '',
+        description: '',
+        duration: ''
+      })))
+    }
+  }, [scrapedData])
 
   const handleServiceChange = (index, field, value) => {
     const newServices = [...services]

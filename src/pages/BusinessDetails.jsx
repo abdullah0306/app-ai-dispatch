@@ -1,8 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useScrapedData } from '../contexts/ScrapedDataContext'
+
+function matchIndustry(scraped, options) {
+  if (!scraped) return '';
+  const lower = scraped.toLowerCase();
+  return options.find(opt => opt.toLowerCase() === lower) || '';
+}
+
+const timezoneMap = {
+  "America/New_York": "Eastern Time (ET)",
+  "America/Chicago": "Central Time (CT)",
+  "America/Denver": "Mountain Time (MT)",
+  "America/Los_Angeles": "Pacific Time (PT)",
+  "America/Anchorage": "Alaska Time (AKT)",
+  "Pacific/Honolulu": "Hawaii-Aleutian Time (HAT)"
+};
+function matchTimezone(scraped) {
+  return timezoneMap[scraped] || '';
+}
 
 function BusinessDetails() {
   const navigate = useNavigate()
+  const { scrapedData } = useScrapedData()
   const [companyName, setCompanyName] = useState('')
   const [industry, setIndustry] = useState('')
   const [timezone, setTimezone] = useState('')
@@ -15,6 +35,9 @@ function BusinessDetails() {
     saturday: 'Closed',
     sunday: 'Closed'
   })
+  const [serviceAreas, setServiceAreas] = useState([
+    { city: '', state: '', zipCode: '' }
+  ])
 
   const industries = [
     'Technology',
@@ -29,14 +52,27 @@ function BusinessDetails() {
     'Other'
   ]
 
-  const timezones = [
-    'Eastern Time (ET)',
-    'Central Time (CT)',
-    'Mountain Time (MT)',
-    'Pacific Time (PT)',
-    'Alaska Time (AKT)',
-    'Hawaii-Aleutian Time (HAT)'
-  ]
+  useEffect(() => {
+    if (scrapedData) {
+      setCompanyName(scrapedData["Company name"] || '')
+      // Industry mapping
+      const scrapedIndustry = Array.isArray(scrapedData["Industry/Industries served"])
+        ? scrapedData["Industry/Industries served"][0]
+        : scrapedData["Industry/Industries served"];
+      setIndustry(matchIndustry(scrapedIndustry, industries));
+      // Timezone mapping
+      setTimezone(matchTimezone(scrapedData["Time Zone"]));
+      if (scrapedData["Physical address"] && (scrapedData["Physical address"].City || scrapedData["Physical address"].State || scrapedData["Physical address"]["ZIP Code"])) {
+        setServiceAreas([
+          {
+            city: scrapedData["Physical address"].City || '',
+            state: scrapedData["Physical address"].State || '',
+            zipCode: scrapedData["Physical address"]["ZIP Code"] || ''
+          }
+        ])
+      }
+    }
+  }, [scrapedData])
 
   const handleHoursChange = (day, value) => {
     setOperatingHours(prev => ({
@@ -44,10 +80,6 @@ function BusinessDetails() {
       [day]: value
     }))
   }
-
-  const [serviceAreas, setServiceAreas] = useState([
-    { city: '', state: '', zipCode: '' }
-  ])
 
   const handleServiceAreaChange = (index, field, value) => {
     const newAreas = [...serviceAreas]
@@ -150,9 +182,9 @@ function BusinessDetails() {
                   className="form-select"
                 >
                   <option value="">Select your timezone</option>
-                  {timezones.map((tz) => (
-                    <option key={tz} value={tz}>
-                      {tz}
+                  {Object.entries(timezoneMap).map(([key, value]) => (
+                    <option key={key} value={value}>
+                      {value}
                     </option>
                   ))}
                 </select>

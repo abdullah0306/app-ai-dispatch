@@ -4,11 +4,14 @@ import { RouterProvider } from 'react-router-dom'
 import './index.css'
 import { router } from './router'
 import { AuthProvider } from './contexts/AuthContext'
+import { ScrapedDataProvider } from './contexts/ScrapedDataContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ScrapedDataProvider>
+        <RouterProvider router={router} />
+      </ScrapedDataProvider>
     </AuthProvider>
   </StrictMode>,
 )
