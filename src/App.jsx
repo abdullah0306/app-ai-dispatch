@@ -21,7 +21,7 @@ function App() {
       setError('')
       setLoading(true)
       // Send request to backend
-      const response = await fetch('https://2a5a455b1326.ngrok-free.app/scrape', {
+      const response = await fetch('https://a7e6b03bc4ff.ngrok-free.app/scrape', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: trimmedUrl }),

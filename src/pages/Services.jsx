@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useScrapedData } from '../contexts/ScrapedDataContext'
+import { addCompanyToFirestore } from '../firebase'
 
 function Services() {
   const navigate = useNavigate()
@@ -44,9 +45,25 @@ function Services() {
     navigate('/business-details')
   }
 
-  const handleContinue = () => {
-    // Add validation here if needed
-    // Store services data in state management or localStorage if needed
+  const handleContinue = async () => {
+    // Gather business details from localStorage or another state management
+    const businessName = localStorage.getItem('businessName') || ''
+    // You can expand this to gather more business details as needed
+    // For a more robust solution, consider using a context or global state for business details
+
+    // Get the current user's UID (for companyId)
+    const user = JSON.parse(localStorage.getItem('user')) // or get from auth context
+    const companyId = user && user.uid ? user.uid : undefined
+
+    // Prepare company data
+    const companyData = {
+      companyName: businessName,
+      services: services,
+      // Add more business details here if available
+    }
+    if (companyId) {
+      await addCompanyToFirestore(companyId, companyData)
+    }
     navigate('/greeting')
   }
 
