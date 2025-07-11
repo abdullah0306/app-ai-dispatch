@@ -24,10 +24,35 @@ export const auth = getAuth(app);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 
+// Add user to Firestore Users collection
+export const addUserToFirestore = async (user) => {
+  if (!user) return;
+  const userData = {
+    uid: user.uid || '',
+    email: user.email || '',
+    displayName: user.displayName || '',
+    photoURL: user.photoURL || '',
+    createdAt: new Date()
+  };
+  console.log('Adding user to Firestore:', userData);
+  await setDoc(doc(db, 'Users', user.uid || ''), userData, { merge: true });
+};
+
+// Add company to Firestore Companies collection
+export const addCompanyToFirestore = async (companyId, companyData) => {
+  if (!companyId || !companyData) return;
+  await setDoc(doc(db, 'company', companyId), {
+    ...companyData,
+    createdAt: new Date()
+  }, { merge: true });
+};
+
 // Authentication functions
 export const signUp = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await addUserToFirestore(user);
     return { success: true, user: userCredential.user };
   } catch (error) {
     return { success: false, error: error.message };
@@ -37,6 +62,8 @@ export const signUp = async (email, password) => {
 export const signIn = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    await addUserToFirestore(user);
     return { success: true, user: userCredential.user };
   } catch (error) {
     return { success: false, error: error.message };
