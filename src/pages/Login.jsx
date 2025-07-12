@@ -39,9 +39,11 @@ function Login() {
           setError(result.error);
         }
       } else {
-        const result = await signUp(email, password);
+        // Combine firstName and lastName for display_name
+        const display_name = `${firstName} ${lastName}`.trim();
+        const result = await signUp(email, password, display_name);
         if (result.success) {
-          // Save additional user data
+          // Save additional user data if needed
           await saveUserData(result.user.uid, {
             firstName,
             lastName,

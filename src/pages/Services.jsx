@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useScrapedData } from '../contexts/ScrapedDataContext'
-import { addCompanyToFirestore } from '../firebase'
+import { addCompanyToFirestore, addCompanyReferenceToUser } from '../firebase'
 import { getAuth } from 'firebase/auth'
 import { doc, getFirestore } from 'firebase/firestore'
 
@@ -70,6 +70,7 @@ function Services() {
 
     if (companyId) {
       await addCompanyToFirestore(companyId, companyData);
+      await addCompanyReferenceToUser(companyId, companyId);
     } else {
       console.error('No companyId found, not saving to Firestore');
     }

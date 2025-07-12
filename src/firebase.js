@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc, getDoc, updateDoc, Timestamp } from 'firebase/firestore';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -50,11 +50,11 @@ export const createUserRecordData = ({
   display_name,
   photo_url,
   uid,
-  created_time,
+  created_time: created_time ? Timestamp.fromDate(new Date(created_time)) : Timestamp.fromDate(new Date()),
   phone_number,
   address,
   strip_payment_id,
-  subscriptionExpireDate,
+  subscriptionExpireDate: subscriptionExpireDate ? Timestamp.fromDate(new Date(subscriptionExpireDate)) : null,
   assistants,
   role,
   status,
@@ -141,15 +141,16 @@ export const createCompanyRecordData = ({
 });
 
 // Update addUserToFirestore to use the schema
-export const addUserToFirestore = async (user) => {
+export const addUserToFirestore = async (user, extra = {}) => {
   if (!user) return;
   const userData = createUserRecordData({
     email: user.email || '',
-    display_name: user.displayName || '',
+    display_name: extra.display_name || user.displayName || '',
     photo_url: user.photoURL || '',
     uid: user.uid || '',
     created_time: new Date(),
     // Add other fields as needed, empty for now
+    ...extra
   });
   console.log('Adding user to Firestore:', userData);
   await setDoc(doc(db, 'user', user.uid || ''), userData, { merge: true });
@@ -165,12 +166,20 @@ export const addCompanyToFirestore = async (companyId, companyData) => {
   await setDoc(doc(db, 'Company', companyId), companyRecord, { merge: true });
 };
 
+// Add company reference to user document
+export const addCompanyReferenceToUser = async (userId, companyId) => {
+  if (!userId || !companyId) return;
+  await updateDoc(doc(db, 'user', userId), {
+    company: doc(db, 'Company', companyId)
+  });
+};
+
 // Authentication functions
-export const signUp = async (email, password) => {
+export const signUp = async (email, password, display_name = '') => {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    await addUserToFirestore(user);
+    await addUserToFirestore(user, { display_name });
     return { success: true, user: userCredential.user };
   } catch (error) {
     return { success: false, error: error.message };
