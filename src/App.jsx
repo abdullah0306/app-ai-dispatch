@@ -21,7 +21,7 @@ function App() {
       setError('')
       setLoading(true)
       // Send request to backend
-      const response = await fetch('https://2626edcef9a5.ngrok-free.app/scrape', {
+      const response = await fetch('https://webscraper.paragonestimator.com/scrape', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: trimmedUrl }),
