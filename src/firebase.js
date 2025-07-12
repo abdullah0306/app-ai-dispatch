@@ -24,27 +24,145 @@ export const auth = getAuth(app);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 
-// Add user to Firestore Users collection
+// User schema function
+export const createUserRecordData = ({
+  email = '',
+  display_name = '',
+  photo_url = '',
+  uid = '',
+  created_time = null,
+  phone_number = '',
+  address = '',
+  strip_payment_id = '',
+  subscriptionExpireDate = null,
+  assistants = [],
+  role = '',
+  status = '',
+  permission = [],
+  company = null, // Firestore document reference
+  subscribed = false,
+  stripe_subscription_status = '',
+  stripe_subscription_id = '',
+  profile_completed = false,
+  credits = 0.0,
+}) => ({
+  email,
+  display_name,
+  photo_url,
+  uid,
+  created_time,
+  phone_number,
+  address,
+  strip_payment_id,
+  subscriptionExpireDate,
+  assistants,
+  role,
+  status,
+  permission,
+  company,
+  subscribed,
+  stripe_subscription_status,
+  stripe_subscription_id,
+  profile_completed,
+  credits,
+});
+
+// Company schema function
+export const createCompanyRecordData = ({
+  name = '',
+  industry = '',
+  companyLink = '',
+  schedule = [],
+  timeZone = '',
+  service = [],
+  promptType = '',
+  aiHandleInbound = false,
+  emailOutbound = false,
+  smsNotification = false,
+  outboundCallHandling = false,
+  offerFreeEstimation = false,
+  fallBackNumber = '',
+  leaveMessagePermission = false,
+  createJobPermission = false,
+  reshedulePermission = false,
+  cancelPermission = false,
+  addNotePermission = false,
+  priceRestriction = false,
+  legalRestriction = false,
+  MedicalRestriction = false,
+  personalQuestion = false,
+  additionalRestrictionTopics = '',
+  assistantname = '',
+  userId = null, // Firestore document reference
+  companyPhoneNumbers = [],
+  smtp = {},
+  phoneNumberMap = [],
+  credits = 0.0,
+  minutes = 0.0,
+  companyMinutesRate = 0.0,
+  serviceAreas = [],
+  isTwentyFourBySeven = false,
+  additionalInsturctions = '',
+}) => ({
+  name,
+  industry,
+  companyLink,
+  schedule,
+  timeZone,
+  service,
+  promptType,
+  aiHandleInbound,
+  emailOutbound,
+  smsNotification,
+  outboundCallHandling,
+  offerFreeEstimation,
+  fallBackNumber,
+  leaveMessagePermission,
+  createJobPermission,
+  reshedulePermission,
+  cancelPermission,
+  addNotePermission,
+  priceRestriction,
+  legalRestriction,
+  MedicalRestriction,
+  personalQuestion,
+  additionalRestrictionTopics,
+  assistantname,
+  userId,
+  companyPhoneNumbers,
+  smtp,
+  phoneNumberMap,
+  credits,
+  minutes,
+  companyMinutesRate,
+  serviceAreas,
+  isTwentyFourBySeven,
+  additionalInsturctions,
+});
+
+// Update addUserToFirestore to use the schema
 export const addUserToFirestore = async (user) => {
   if (!user) return;
-  const userData = {
-    uid: user.uid || '',
+  const userData = createUserRecordData({
     email: user.email || '',
-    displayName: user.displayName || '',
-    photoURL: user.photoURL || '',
-    createdAt: new Date()
-  };
+    display_name: user.displayName || '',
+    photo_url: user.photoURL || '',
+    uid: user.uid || '',
+    created_time: new Date(),
+    // Add other fields as needed, empty for now
+  });
   console.log('Adding user to Firestore:', userData);
-  await setDoc(doc(db, 'Users', user.uid || ''), userData, { merge: true });
+  await setDoc(doc(db, 'user', user.uid || ''), userData, { merge: true });
 };
 
-// Add company to Firestore Companies collection
+// Update addCompanyToFirestore to use the schema
 export const addCompanyToFirestore = async (companyId, companyData) => {
   if (!companyId || !companyData) return;
-  await setDoc(doc(db, 'company', companyId), {
-    ...companyData,
-    createdAt: new Date()
-  }, { merge: true });
+  const companyRecord = createCompanyRecordData({
+    ...companyData
+    // Fill in all fields, empty if not present
+  });
+  await setDoc(doc(db, 'Company', companyId), companyRecord, { merge: true });
 };
 
 // Authentication functions

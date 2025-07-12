@@ -96,8 +96,16 @@ function BusinessDetails() {
   }
 
   const handleContinue = () => {
-    // Add validation here if needed
-    localStorage.setItem('businessName', companyName);
+    // Save all business details to localStorage
+    const businessDetails = {
+      companyName,
+      industry,
+      timezone,
+      operatingHours,
+      serviceAreas,
+      // add any other fields you want to save
+    };
+    localStorage.setItem('businessDetails', JSON.stringify(businessDetails));
     navigate('/services');
   }
 
