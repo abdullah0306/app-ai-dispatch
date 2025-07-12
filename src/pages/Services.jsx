@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useScrapedData } from '../contexts/ScrapedDataContext'
 import { addCompanyToFirestore } from '../firebase'
+import { getAuth } from 'firebase/auth'
+import { doc, getFirestore } from 'firebase/firestore'
 
 function Services() {
   const navigate = useNavigate()
@@ -46,25 +48,32 @@ function Services() {
   }
 
   const handleContinue = async () => {
-    // Gather business details from localStorage or another state management
-    const businessName = localStorage.getItem('businessName') || ''
-    // You can expand this to gather more business details as needed
-    // For a more robust solution, consider using a context or global state for business details
+    const businessDetails = JSON.parse(localStorage.getItem('businessDetails')) || {};
+    const auth = getAuth();
+    const user = auth.currentUser;
+    const companyId = user ? user.uid : undefined;
+    const db = getFirestore();
 
-    // Get the current user's UID (for companyId)
-    const user = JSON.parse(localStorage.getItem('user')) // or get from auth context
-    const companyId = user && user.uid ? user.uid : undefined
-
-    // Prepare company data
+    // Map business details and services to Company schema fields
     const companyData = {
-      companyName: businessName,
-      services: services,
-      // Add more business details here if available
-    }
+      name: businessDetails.companyName || '',
+      industry: businessDetails.industry || '',
+      timeZone: businessDetails.timezone || '',
+      serviceAreas: businessDetails.serviceAreas || [],
+      schedule: [], // You can map operatingHours if you want
+      service: services, // Array of service objects from Services page
+      userId: user ? doc(db, 'user', user.uid) : null,
+      // Add more mappings as needed for your schema
+    };
+
+    console.log('Saving company to Firestore:', { companyId, companyData });
+
     if (companyId) {
-      await addCompanyToFirestore(companyId, companyData)
+      await addCompanyToFirestore(companyId, companyData);
+    } else {
+      console.error('No companyId found, not saving to Firestore');
     }
-    navigate('/greeting')
+    navigate('/greeting');
   }
 
   return (
